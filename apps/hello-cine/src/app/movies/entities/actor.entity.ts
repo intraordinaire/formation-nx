@@ -1,4 +1,4 @@
-import {Column, Entity, ManyToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, Index, ManyToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Movie} from "./movie.entity";
 
 @Entity('actors')
@@ -13,6 +13,7 @@ export class Actor {
   lastname: string
 
   @Column()
+  @Index()
   nickname: string
 
   @Column()
@@ -20,11 +21,8 @@ export class Actor {
 
   @ManyToMany(
     () => Movie,
-    movie => movie.actorList,
-    {
-      cascade: true,
-    }
+    movie => movie.actorList
   )
-  movieList: string[]
+  movieList: Movie[]
 
 }

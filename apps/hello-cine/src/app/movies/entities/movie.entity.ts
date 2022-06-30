@@ -1,7 +1,8 @@
-import {Column, Entity, ManyToMany, PrimaryGeneratedColumn, JoinTable} from "typeorm";
+import {Column, Entity, ManyToMany, PrimaryGeneratedColumn, JoinTable, Index} from "typeorm";
 import {Actor} from "./actor.entity";
 
 @Entity('movies')
+@Index(['title', 'releaseDate'])
 export class Movie {
   @PrimaryGeneratedColumn()
   id: number
@@ -15,8 +16,11 @@ export class Movie {
   @ManyToMany(
     () => Actor,
     actor => actor.movieList,
+    {
+      cascade: true,
+    }
   )
   @JoinTable()
-  actorList: string[]
+  actorList: Actor[]
 
 }

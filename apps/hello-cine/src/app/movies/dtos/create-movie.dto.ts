@@ -1,11 +1,14 @@
-import {IsString} from "class-validator";
-import {Actor} from "../entities/actor.entity";
+import {IsArray, IsString, ValidateNested} from "class-validator";
+import {CreateActorDto} from "./create-actor.dto";
+import {Type} from "class-transformer";
 
 export class CreateMovieDto {
   @IsString()
   readonly title: string
   @IsString()
   readonly releaseDate: string
-  @IsString({each: true})
-  readonly actorList: Actor[]
+  @Type(() => CreateActorDto)
+  @IsArray()
+  @ValidateNested()
+  readonly actorList: CreateActorDto[]
 }

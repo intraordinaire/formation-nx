@@ -3,27 +3,33 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
+  Param, ParseIntPipe,
   Patch,
   Post,
-  Query,
+  Query, UsePipes, ValidationPipe,
 } from '@nestjs/common';
-import { MoviesService } from './services/movies.service';
+import {MoviesService} from './services/movies.service';
 import {CreateMovieDto} from "./dtos/create-movie.dto";
 import {UpdateMovieDto} from "./dtos/update-movie.dto";
+import {PaginationQueryDto} from "../common/dtos/pagination-query.dto";
 
+@UsePipes(new ValidationPipe({
+  whitelist: true,
+  forbidNonWhitelisted: true,
+  transform: true
+}))
 @Controller('movies')
 export class MoviesController {
-  constructor(private readonly movieService: MoviesService) {}
+  constructor(private readonly movieService: MoviesService) {
+  }
 
   @Get()
-  findAll(@Query() paginatioQuery) {
-    const { limit, offset } = paginatioQuery;
-    return this.movieService.findAll(limit, offset);
+  findAll(@Query() paginationQuery: PaginationQueryDto) {
+    return this.movieService.findAll({paginationQuery});
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.movieService.findOne(id)
   }
 
@@ -33,12 +39,12 @@ export class MoviesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateMovieDto: UpdateMovieDto) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateMovieDto: UpdateMovieDto) {
     return this.movieService.update(id, updateMovieDto)
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.movieService.delete(id)
   }
 }
