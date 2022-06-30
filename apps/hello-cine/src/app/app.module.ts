@@ -1,11 +1,23 @@
-import { Module } from '@nestjs/common';
+import {Module} from '@nestjs/common';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import {AppController} from './app.controller';
+import {AppService} from './app.service';
+import {MoviesModule} from './movies/movies.module';
+import {TypeOrmModule} from "@nestjs/typeorm";
 
 @Module({
-  imports: [],
+  imports: [MoviesModule, TypeOrmModule.forRoot({
+    type: 'postgres',
+    host: process.env.POSTGRES_HOST,
+    port: parseInt(process.env.POSTGRES_PORT, 10),
+    username: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD,
+    database: process.env.POSTGRES_DB,
+    autoLoadEntities: true,
+    synchronize: true,
+  })],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+}

@@ -23,14 +23,25 @@
               "with": "apps/hello-cine/src/environments/environment.prod.ts"
             }
           ]
+        },
+        "development": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
         }
       }
     },
     "serve": {
       "executor": "@nrwl/node:node",
-      "options": {
-        "buildTarget": "hello-cine:build"
-      }
+      "configurations": {
+        "development": {
+          "buildTarget": "hello-cine:build:development"
+        },
+        "production":{
+          "buildTarget": "hello-cine:build:production"
+        }
+      },
+      "defaultConfiguration": "production"
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",

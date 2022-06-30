@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
+    "start:dev": "nx serve --configuration=development",
     "build": "nx build",
     "test": "nx test"
   },
@@ -11,10 +12,16 @@
   "dependencies": {
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
+    "@nestjs/mapped-types": "^1.0.1",
     "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/typeorm": "^8.1.4",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.2",
+    "pg": "^8.7.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.0.0",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "typeorm": "^0.3.7"
   },
   "devDependencies": {
     "@nestjs/schematics": "^8.0.0",
