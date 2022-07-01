@@ -27,7 +27,7 @@ export class MoviesService {
     // const host = this.configService.get('database.host');
     // const moviesConfig = this.configService.get('movies');
 
-    console.log(this.moviesConfiguration);
+    // console.log(this.moviesConfiguration);
   }
 
   async findAll({paginationQuery}: { paginationQuery: PaginationQueryDto }) {
