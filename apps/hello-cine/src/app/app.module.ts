@@ -1,5 +1,5 @@
 import * as Joi from '@hapi/joi'
-import {Module} from '@nestjs/common';
+import {MiddlewareConsumer, Module, NestModule, RequestMethod} from '@nestjs/common';
 
 import {AppController} from './app.controller';
 import {AppService} from './app.service';
@@ -8,6 +8,9 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import {ConfigModule} from "@nestjs/config";
 
 import appConfig from "./app.config";
+import {APP_GUARD} from "@nestjs/core";
+import {ApiKeyGuard} from "./common/guards/api-key.guard";
+import {LoggingMiddleware} from "./common/middlewares/logging.middleware";
 
 @Module({
   imports: [
@@ -36,7 +39,22 @@ import appConfig from "./app.config";
       })
     })],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ApiKeyGuard,
+    }
+  ],
 })
-export class AppModule {
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): any {
+    consumer.apply(LoggingMiddleware).forRoutes('*')
+    // consumer.apply(LoggingMiddleware).exclude('*')
+    consumer.apply(LoggingMiddleware).forRoutes({
+      path: 'movies',
+      method: RequestMethod.GET,
+    })
+  }
+
 }

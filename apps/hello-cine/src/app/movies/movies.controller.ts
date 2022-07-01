@@ -3,7 +3,7 @@ import {
   Controller,
   Delete,
   Get,
-  Param, ParseIntPipe,
+  Param,
   Patch,
   Post,
   Query, UsePipes, ValidationPipe,
@@ -12,23 +12,40 @@ import {MoviesService} from './services/movies.service';
 import {CreateMovieDto} from "./dtos/create-movie.dto";
 import {UpdateMovieDto} from "./dtos/update-movie.dto";
 import {PaginationQueryDto} from "../common/dtos/pagination-query.dto";
+import {Public} from "../common/decorators/public.decorator";
+import {delay, of} from "rxjs";
+import {ParseIntPipe} from "../common/pipes/parse-int.pipe";
+import {Protocol} from "../common/decorators/protocol.decorator";
+import {ApiForbiddenResponse, ApiResponse, ApiTags} from "@nestjs/swagger";
 
 @UsePipes(new ValidationPipe({
   whitelist: true,
   forbidNonWhitelisted: true,
-  transform: true
 }))
+@ApiTags('Movies')
 @Controller('movies')
 export class MoviesController {
   constructor(private readonly movieService: MoviesService) {
   }
 
   @Get()
-  findAll(@Query() paginationQuery: PaginationQueryDto) {
-    return this.movieService.findAll({paginationQuery});
+  @Public()
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
+  })
+  findAll(@Protocol('https') protocol: string, @Query() paginationQuery: PaginationQueryDto) {
+    console.log(protocol)
+    return this.movieService.findAll({paginationQuery})
+    // return of(this.movieService.findAll({paginationQuery})).pipe(
+    //   // delay(6000),
+    // );
   }
 
   @Get(':id')
+  @ApiForbiddenResponse({
+    description: 'Forbidden',
+  })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.movieService.findOne(id)
   }
