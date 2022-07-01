@@ -37,7 +37,8 @@ import {LoggingMiddleware} from "./common/middlewares/logging.middleware";
         autoLoadEntities: true,
         synchronize: true,
       })
-    })],
+    }),
+  ],
   controllers: [AppController],
   providers: [
     AppService,
